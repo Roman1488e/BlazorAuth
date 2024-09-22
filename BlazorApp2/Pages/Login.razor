@@ -1,0 +1,22 @@
+﻿@page "/Login"
+@using Blazored.LocalStorage
+@inject ILocalStorageService StorageService
+@inject NavigationManager navigation
+<h3>Login</h3>
+
+<form @onsubmit="HandleSubmit">
+    <label>Token:</label><br>
+    <input type="text" @bind="token"><br>
+    <input type="submit" value="Submit">
+    
+</form>
+
+    @code {
+    private string token { get; set; }
+
+    private async Task HandleSubmit()
+    {
+       await StorageService.SetItemAsStringAsync("token",token);
+       navigation.NavigateTo("/check");
+    }
+}

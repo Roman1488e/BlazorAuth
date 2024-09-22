@@ -1,0 +1,28 @@
+﻿@page "/role"
+@using System.Security.Claims
+@using BlazorApp2.Auth
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider state
+@attribute [Authorize]
+<AuthorizeView Roles="admin">
+    <Authorized>
+        <PageTitle>Role Check</PageTitle>
+
+        <h1>Your Role is: @Role</h1>
+        
+        @code {
+            protected string Role { get; set; }
+            protected override async Task OnInitializedAsync()
+            {
+                var auth = (CustomAuth)state;
+                var user = await auth.GetAuthenticationStateAsync();
+                Role = user.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
+            }
+
+        }
+    </Authorized>
+    <NotAuthorized>
+        <h1 style="color: red">Access Denied!</h1>
+    </NotAuthorized>
+</AuthorizeView>
